@@ -9,7 +9,11 @@ const YAML = require('yamljs');
 const app = express();
 
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    // Isme dono URLs daal do: Localhost bhi aur Render wala bhi
+    origin: [
+        'http://localhost:5173', 
+        'https://markettred-frontend.onrender.com'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
