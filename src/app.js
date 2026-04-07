@@ -26,5 +26,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/chat', chatRoutes);
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'Active', message: 'Server is awake!' });
+});
 
 module.exports = app;
