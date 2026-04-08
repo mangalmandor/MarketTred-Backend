@@ -144,8 +144,37 @@ const getConversations = async (req, res) => {
     }
 };
 
+const deleteChat = async (req, res) => {
+    const { otherUserId, productId } = req.params;
+    const currentUserId = req.user._id;
+
+    try {
+        const result = await Message.deleteMany({
+            product: productId,
+            $or: [
+                { sender: currentUserId, receiver: otherUserId },
+                { sender: otherUserId, receiver: currentUserId }
+            ]
+        });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "No messages found to delete" });
+        }
+
+        res.status(200).json({
+            message: "Chat history deleted successfully",
+            productId,
+            otherUserId
+        });
+    } catch (error) {
+        console.error("DeleteChat Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     sendMessage,
     getMessages,
-    getConversations
+    getConversations,
+    deleteChat
 };
