@@ -33,7 +33,7 @@ const sendMessage = async (req, res) => {
         sendRealTimeMessage(receiverId, socketPayload);
 
         User.findById(receiverId).then(async (receiverUser) => {
-            if (receiverUser && receiverUser.email) {
+            if (receiverUser && receiverUser.email) {       
                 try {
                     await sendEmailAlert({
                         to: receiverUser.email,
