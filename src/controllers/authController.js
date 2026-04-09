@@ -13,18 +13,18 @@ const register = async (req, res) => {
 
         await Otp.deleteMany({ email });
         await Otp.create({ email, otp });
-sendEmailAlert({
-    to: email,
-    subject: 'Your Registration OTP',
-    text: `Your OTP for registration is: ${otp}. It is valid for 5 minutes.`
-}).catch((err) => {
-    console.error('Background email failed to send:', err);
-});
+        sendEmailAlert({
+            to: email,
+            subject: 'Your Registration OTP',
+            text: `Your OTP for registration is: ${otp}. It is valid for 5 minutes.`
+        }).catch((err) => {
+            console.error('Background email failed to send:', err);
+        });
 
-       res.status(200).json({ 
-    success: true, 
-    message: "OTP sent successfully! Please check your email." 
-});
+        res.status(200).json({
+            success: true,
+            message: "OTP sent successfully! Please check your email."
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -52,16 +52,15 @@ const login = async (req, res) => {
         if (user && (await user.matchPassword(password))) {
             const token = await generateToken({ userId: user._id, role: user.role });
 
-            res.json({
+            return res.json({
                 _id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
                 token
             });
-            // console.log(token);
         } else {
-            res.status(401).json({ error: 'Invalid email or password' });
+            return res.status(401).json({ error: 'Invalid email or password' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });

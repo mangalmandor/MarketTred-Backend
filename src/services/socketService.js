@@ -27,7 +27,7 @@ const initSocket = (server) => {
     });
 
     io.on('connection', (socket) => {
-        const userId = socket.userId;
+        const userId = socket.userId.toString();
 
         if (!userSockets.has(userId)) {
             userSockets.set(userId, []);
