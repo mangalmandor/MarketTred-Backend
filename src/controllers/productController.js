@@ -1,11 +1,38 @@
 const Product = require('../models/Product');
 
+// productController.js
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({}).populate('seller', '_id role name email');
-    res.status(200).json(products);
+    // 1. URL se page, limit aur search query nikalna
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12; // Ek page par 10 items
+    const search = req.query.search || "";
+
+    // 2. Search ka logic (Tumhara purana logic yahan rahega)
+    const query = search ? { title: { $regex: search, $options: 'i' } } : {};
+
+    // 3. Math for pagination
+    const skip = (page - 1) * limit;
+
+    // 4. Database se data lana (skip aur limit ke sath)
+    const products = await Product.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 }); // Naye products pehle
+
+    // 5. Total count nikalna (Frontend ko pata hona chahiye total pages kitne hain)
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // 6. Response bhejna
+    res.status(200).json({
+      products,
+      currentPage: page,
+      totalPages,
+      totalProducts
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
