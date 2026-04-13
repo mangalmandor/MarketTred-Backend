@@ -9,7 +9,6 @@ const YAML = require('yamljs');
 const app = express();
 
 app.use(cors({
-    // Isme dono URLs daal do: Localhost bhi aur Render wala bhi
     origin: [
         'http://localhost:5173',
         'https://markettred-frontend.onrender.com'
@@ -19,7 +18,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
