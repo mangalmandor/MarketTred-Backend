@@ -9,4 +9,5 @@ router.get('/conversations', requireAuth, getConversations);
 router.get('/:otherUserId/:productId', requireAuth, getMessages);
 router.delete('/:otherUserId/:productId', requireAuth, deleteChat);
 
+
 module.exports = router;
